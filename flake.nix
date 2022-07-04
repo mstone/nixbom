@@ -14,24 +14,26 @@
       inherit self nixpkgs;
       name = "nixbom";
       systems = flake-utils.lib.allSystems;
-      preOverlays = [ rust-overlay.overlay ];
+      preOverlays = [ rust-overlay.overlays.default ];
       overlay = final: prev: {
         nixbom = rec {
-          nixbom = with final; with pkgs; let 
+          rust = with final; with pkgs; rust-bin.stable.latest.minimal;
+          cranelib = crane.lib."${final.system}".overrideToolchain rust;
+          nixbom = with final; with pkgs; let
             buildInputs = [
-              rust-bin.stable.latest.minimal
+              rust
             ];
-          in crane.lib.${final.system}.buildPackage {
+          in cranelib.buildPackage {
             pname = "nixbom";
             version = "1.0";
             src = self;
             inherit buildInputs;
-            cargoArtifacts = crane.lib.${final.system}.buildDepsOnly { 
-              src = self; 
+            cargoArtifacts = cranelib.buildDepsOnly {
+              src = self;
               inherit buildInputs;
             };
           };
-          
+
           defaultPackage = nixbom;
         };
       };
