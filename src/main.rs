@@ -343,7 +343,7 @@ fn main() -> Result<(), Error> {
 
     // TODO: Handle failure better
     let derivation = matches.value_of("DERIVATION").unwrap();
-    let json = get_derivation_json(derivation, true)?;
+    let json = get_derivation_json(derivation, false)?;
     let derivation_struct_map: HashMap<String, Drv> = serde_json::from_value(json)?;
     let input_derivations = derivation_struct_map.get_input_derivations();
 
