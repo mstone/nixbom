@@ -3,6 +3,7 @@
 
   inputs.crane.url = "github:ipetkov/crane";
   inputs.crane.inputs.nixpkgs.follows = "nixpkgs";
+  inputs.crane.inputs.rust-overlay.follows = "rust-overlay";
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.nixpkgs.url = "nixpkgs/nixpkgs-unstable";
   inputs.rust-overlay.url = "github:oxalica/rust-overlay";
@@ -13,7 +14,6 @@
     flake-utils.lib.simpleFlake {
       inherit self nixpkgs;
       name = "nixbom";
-      systems = flake-utils.lib.allSystems;
       preOverlays = [ rust-overlay.overlays.default ];
       overlay = final: prev: {
         nixbom = rec {
